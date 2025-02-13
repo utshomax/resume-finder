@@ -66,12 +66,11 @@ const getResumeByName = async (req: Request, res: Response) => {
     }
 
     const name = decodeURIComponent(encodedName.replace(/\+/g, ' '));
-    console.log(name);
     const [firstName, lastName] = name.split(' ');
 
-    if (!firstName || !lastName) {
-      return res.status(400).json({ error: 'Name must be in "firstName+lastName" format' });
-    }
+    // if (!firstName || !lastName) {
+    //   return res.status(400).json({ error: 'Name must be in "firstName+lastName" format' });
+    // }
 
     const resumes = await ResumeModel.findByName(firstName, lastName);
     const formattedResumes = resumes.map(resume => ({
