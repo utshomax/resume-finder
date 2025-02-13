@@ -37,3 +37,6 @@ A web application for storing and searching resumes.
 ## Tech Stack
 - Backend: Node.js, Express, PostgreSQL, Drizzle ORM
 - Frontend: React, TypeScript, TailwindCSS, Vite
+
+## Preview
+![image](https://github.com/user-attachments/assets/d94aba88-c010-4bf7-88ca-420d9296df23)
