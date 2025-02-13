@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:18-alpine AS builder
 
 WORKDIR /app
 
@@ -12,6 +12,10 @@ COPY . .
 
 RUN pnpm build
 
-EXPOSE 8080
+FROM nginx:alpine
 
-CMD ["pnpm", "start"]
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
