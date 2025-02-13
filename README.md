@@ -9,18 +9,13 @@ A web application for storing and searching resumes.
 
 ## Quick Start
 
-1. Clone the repository
-2. Copy the environment file:
-   ```bash
-   cp .env.example .env
-   ```
-3. Start the application:
+1. Start the application:
    ```bash
    docker-compose up
    ```
    The application will be available at:
-   - Frontend: http://localhost:5173
-   - API: http://localhost:3000
+   - Frontend: http://localhost:3000
+   - API: http://localhost:8080
 
 ## Development Setup
 
@@ -38,3 +33,7 @@ A web application for storing and searching resumes.
    # In another terminal, start frontend
    cd frontend && pnpm dev
    ```
+
+## Tech Stack
+- Backend: Node.js, Express, PostgreSQL, Drizzle ORM
+- Frontend: React, TypeScript, TailwindCSS, Vite
