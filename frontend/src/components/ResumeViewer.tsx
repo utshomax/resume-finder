@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Spinner from './Spinner';
 
-const apiUrl = import.meta.env.VITE_BASE_URL || 'http://localhost:8080';
+const apiUrl = 'https://quick-demo.utsho.dev:3010';
 
 interface ResumeViewerProps {
   onSuccess?: (message: string) => void;

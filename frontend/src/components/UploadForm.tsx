@@ -13,7 +13,7 @@ interface UploadFormProps {
   onSuccess: (message: string) => void;
   onError: (message: string) => void;
 }
-const apiUrl = import.meta.env.VITE_BASE_URL || 'http://localhost:8080';
+const apiUrl = 'https://quick-demo.utsho.dev:3010';
 
 const UploadForm: React.FC<UploadFormProps> = ({ onSuccess, onError }) => {
   const [formData, setFormData] = useState<ResumeFormData>({
