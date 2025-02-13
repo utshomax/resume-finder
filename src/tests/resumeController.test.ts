@@ -90,12 +90,12 @@ describe('ResumeController', () => {
       await ResumeController.getResumeById(req, res);
 
       expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith({
+      expect(res.json).toHaveBeenCalledWith([{
         name: 'John Doe',
         currentJobTitle: testData.currentJobTitle,
         currentJobDescription: testData.currentJobDescription,
         currentJobCompany: testData.currentJobCompany
-      });
+      }]);
     });
 
     it('should return 404 for non-existent resume', async () => {
