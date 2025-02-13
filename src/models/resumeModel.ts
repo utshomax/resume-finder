@@ -36,6 +36,8 @@ export class ResumeModel {
         or(
           eq(resumes.firstName, firstName),
           eq(resumes.lastName, lastName),
+          eq(resumes.firstName, lastName),
+          eq(resumes.lastName, firstName)
         )
       );
 

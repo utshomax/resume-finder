@@ -132,13 +132,13 @@ describe('ResumeController', () => {
       ]);
     });
 
-    it('should return partial matches', async () => {
+    it('should return matches for single name search', async () => {
       const testData1 = createTestResume({ firstName: 'John', lastName: 'Smith' });
-      const testData2 = createTestResume({ firstName: 'Jane', lastName: 'Evans' });
+      const testData2 = createTestResume({ firstName: 'Jane', lastName: 'John' });
       await ResumeModel.create(testData1);
       await ResumeModel.create(testData2);
 
-      const req = mockRequest({ name: 'John+Evans' });
+      const req = mockRequest({ name: 'John' });
       const res = mockResponse();
 
       await ResumeController.getResumeByName(req, res);
@@ -151,27 +151,15 @@ describe('ResumeController', () => {
             currentJobTitle: testData1.currentJobTitle
           }),
           expect.objectContaining({
-            name: 'Jane Evans',
+            name: 'Jane John',
             currentJobTitle: testData2.currentJobTitle
           })
         ])
       );
     });
 
-    it('should return 400 for invalid name format', async () => {
-      const req = mockRequest({ name: 'John' });
-      const res = mockResponse();
-
-      await ResumeController.getResumeByName(req, res);
-
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({
-        error: 'Name must be in "firstName+lastName" format'
-      });
-    });
-
     it('should return empty array when no matches found', async () => {
-      const req = mockRequest({ name: 'NonExistent+Person' });
+      const req = mockRequest({ name: 'NonExistent' });
       const res = mockResponse();
 
       await ResumeController.getResumeByName(req, res);
@@ -179,5 +167,40 @@ describe('ResumeController', () => {
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith([]);
     });
+  });
+  it('should return partial matches', async () => {
+    const testData1 = createTestResume({ firstName: 'John', lastName: 'Smith' });
+    const testData2 = createTestResume({ firstName: 'Jane', lastName: 'Evans' });
+    await ResumeModel.create(testData1);
+    await ResumeModel.create(testData2);
+
+    const req = mockRequest({ name: 'John+Evans' });
+    const res = mockResponse();
+
+    await ResumeController.getResumeByName(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: 'John Smith',
+          currentJobTitle: testData1.currentJobTitle
+        }),
+        expect.objectContaining({
+          name: 'Jane Evans',
+          currentJobTitle: testData2.currentJobTitle
+        })
+      ])
+    );
+  });
+
+  it('should return empty array when no matches found', async () => {
+    const req = mockRequest({ name: 'NonExistent+Person' });
+    const res = mockResponse();
+
+    await ResumeController.getResumeByName(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith([]);
   });
 });
