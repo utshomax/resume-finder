@@ -1,5 +1,5 @@
 import { eq, or, and } from 'drizzle-orm';
-import { db, resumes, type Resume, type NewResume } from '../db';
+import { db, resumes, type Resume, type NewResume, lower } from '../db';
 
 export class ResumeModel {
   static async create(resume: NewResume): Promise<Resume> {
@@ -13,14 +13,16 @@ export class ResumeModel {
   }
 
   static async findByName(firstName: string, lastName: string): Promise<Resume[]> {
+    const lowerFirstName = firstName.toLowerCase();
+    const lowerLastName = lastName.toLowerCase();
     // trying exact match first
     const exactMatches = await db
       .select()
       .from(resumes)
       .where(
         and(
-          eq(resumes.firstName, firstName),
-          eq(resumes.lastName, lastName)
+          eq(lower(resumes.firstName), lowerFirstName),
+          eq(lower(resumes.lastName), lowerLastName)
         )
       );
 
@@ -34,10 +36,10 @@ export class ResumeModel {
       .from(resumes)
       .where(
         or(
-          eq(resumes.firstName, firstName),
-          eq(resumes.lastName, lastName),
-          eq(resumes.firstName, lastName),
-          eq(resumes.lastName, firstName)
+          eq(lower(resumes.firstName), lowerFirstName),
+          eq(lower(resumes.lastName), lowerLastName),
+          eq(lower(resumes.firstName), lowerLastName),
+          eq(lower(resumes.lastName), lowerFirstName)
         )
       );
 
