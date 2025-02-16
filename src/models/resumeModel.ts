@@ -13,35 +13,45 @@ export class ResumeModel {
   }
 
   static async findByName(firstName: string, lastName: string): Promise<Resume[]> {
-    const lowerFirstName = firstName.toLowerCase();
-    const lowerLastName = lastName.toLowerCase();
-    // trying exact match first
-    const exactMatches = await db
-      .select()
-      .from(resumes)
-      .where(
-        and(
-          eq(lower(resumes.firstName), lowerFirstName),
-          eq(lower(resumes.lastName), lowerLastName)
-        )
-      );
-
-    if (exactMatches.length > 0) {
-      return exactMatches;
+    if (!firstName && !lastName) {
+      return [];
     }
 
-    // if no exact matches, try partial matches
+    const lowerFirstName = firstName?.toLowerCase() || '';
+    const lowerLastName = lastName?.toLowerCase() || '';
+
+    // trying exact match first if both names are provided
+    if (firstName && lastName) {
+      const exactMatches = await db
+        .select()
+        .from(resumes)
+        .where(
+          and(
+            eq(lower(resumes.firstName), lowerFirstName),
+            eq(lower(resumes.lastName), lowerLastName)
+          )
+        );
+
+      if (exactMatches.length > 0) {
+        return exactMatches;
+      }
+    }
+
+    // if no exact matches or only one name provided, try partial matches
+    const conditions = [];
+    if (firstName) {
+      conditions.push(eq(lower(resumes.firstName), lowerFirstName));
+      conditions.push(eq(lower(resumes.lastName), lowerFirstName));
+    }
+    if (lastName) {
+      conditions.push(eq(lower(resumes.firstName), lowerLastName));
+      conditions.push(eq(lower(resumes.lastName), lowerLastName));
+    }
+
     const partialMatches = await db
       .select()
       .from(resumes)
-      .where(
-        or(
-          eq(lower(resumes.firstName), lowerFirstName),
-          eq(lower(resumes.lastName), lowerLastName),
-          eq(lower(resumes.firstName), lowerLastName),
-          eq(lower(resumes.lastName), lowerFirstName)
-        )
-      );
+      .where(or(...conditions));
 
     return partialMatches;
   }
